@@ -4,10 +4,15 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class OBJ_Phone extends SuperObject{
+import main.GamePanel;
 
-	public OBJ_Phone() {
-		
+public class OBJ_Phone extends SuperObject{
+	
+	GamePanel gp;
+
+	public OBJ_Phone(GamePanel gp) {
+		this.gp = gp;
+
 		name = "Phone";
 		try {
 			image = ImageIO.read(getClass().getResourceAsStream("/objects/phone.png"));

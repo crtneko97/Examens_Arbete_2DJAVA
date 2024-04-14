@@ -42,16 +42,23 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	// SYSTEM
 	TileManager tileM = new TileManager(this);
-	KeyHandler keyH = new KeyHandler();
-	Sound sound = new Sound();
+	KeyHandler keyH = new KeyHandler(this);
+	Sound music = new Sound();
+	Sound se = new Sound();
 	Thread gameThread;
 	public CollisionChecker cChecker = new CollisionChecker(this);
 	public AssetSetter aSetter = new AssetSetter(this);
+	public UI ui = new UI(this);
 	
 	
 	// ENTITY AND OBJECT
 	public Player player = new Player(this, keyH);
 	public SuperObject obj[] = new SuperObject[10];
+	
+	// GAME STATE
+	public int gameState;
+	public final int playState = 1;
+	public final int pauseState = 2;
 	
 	// Set player's default position
 	int playerX = 100;
@@ -69,8 +76,9 @@ public class GamePanel extends JPanel implements Runnable{
 	public void setupGame() {
 		
 		aSetter.setObject();
-		
 		playMusic(0);
+		stopMusic();
+		gameState = playState;
 	}
 	
 	public void startGameThread() {
@@ -81,52 +89,6 @@ public class GamePanel extends JPanel implements Runnable{
 
 	// So basically when we start tgus ganeThread it will automatically call this run method
 	@Override
-//	public void run() {
-//		// in this run method, we will create a game loop which will be the core of our game
-//		
-//		// Sleeper method
-//		double drawInterval = 1000000000/FPS;
-//		double nextDrawTime = System.nanoTime() + drawInterval;
-//		
-//		
-//		// gameThread != null means, as long as this gameThread exists, it repeats the process that is written inside of the these brackets
-//		while(gameThread != null) {
-//			//Need to limit this loop for how fast it should update things
-//			// check the cutrrent time, we type like this
-////			long currentTime= System.nanoTime(); //Returns the current value of the running Java Virtual Machine's high -resolution time source, in nanoseconds
-////			Long currenTime2 = System.currentTimeMillis(); // this returns the current time in milliseconds this is okay too, but nano is more precise
-////			System.out.println("Current Time: "+currentTime);
-//			
-//			//Two things that we're gonna do in this loop is
-//			// 1 UPDATE: update information such as character position
-//			// this means that we want to update the player information based on where the character is positioned
-//			update();
-//			// 2 DRAW: draw the screen with the updated information
-//			// based on this updated information, we redaw the screen
-//			
-//			repaint(); // This is how we call the paintComponent
-//			
-//			// figure out how much time until the next draw time
-//			
-//			// let the thread sleep for the remaining time for the next draw time
-//			try {
-//				double remainingTime = nextDrawTime - System.nanoTime(); // subtract the current time from nextDrawTime so this returns how much time remaining until the nextDrawTime
-//				// convert nanoseconds to milliseconds
-//				remainingTime = remainingTime/100000; // so we can accept this as milliseconds
-//				
-//				// so if this update and repaint took more than this drawInterval then no time is left this thread doesn't need to sleep since we already used the allocated time so we put 0 to the remainingTime i doubt this will happen in my game but just in case
-//				if(remainingTime < 0) {
-//					remainingTime = 0;
-//				}
-//
-//				Thread.sleep((long) remainingTime); // this sleep basically pause the game loop so it won't do anything until this sleep time is over
-//				
-//				nextDrawTime += drawInterval; //which means 0.01666 seconds later will be the nextDrawTime
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
 	public void run() {
 		double drawIntterval = 1000000000/FPS;
 		double delta = 0;
@@ -167,9 +129,14 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	public void update() {
 		//Change the player position
+		if(gameState == playState) {
+			// x row y coloumn so whenever player hit these keys the key input is catched by KeyHandler and this update method updates the player coordinates then after this update, it's gonna call this paintComponent that draws a rectangle with updated player X and Y positions
+			player.update();			
+		}
+		if(gameState == pauseState) {
+			// nothing
+		}
 		
-		// x row y coloumn so whenever player hit these keys the key input is catched by KeyHandler and this update method updates the player coordinates then after this update, it's gonna call this paintComponent that draws a rectangle with updated player X and Y positions
-		player.update();
 	}
 	
 	//this paintComponent is actually a built-in method in Java so the name isnt original name it's a stand method name to draw on jpanel
@@ -186,6 +153,12 @@ public class GamePanel extends JPanel implements Runnable{
 		//so this means we change this Graphics g to this Graphics2D class this Graphics and Graphics2D are kind of similar but this Graphics2D has a bit more functions
 		Graphics2D g2 = (Graphics2D)g;
 		
+		// DEBUG
+		long drawStart = 0;
+		if(keyH.checkDrawTime == true) {
+			drawStart = System.nanoTime();			
+		}
+		
 		// TILE
 		tileM.draw(g2);
 		
@@ -199,24 +172,36 @@ public class GamePanel extends JPanel implements Runnable{
 		// PLAYER
 		player.draw(g2);
 		
+		// DEBUG
+		if(keyH.checkDrawTime == true) {
+			long drawEnd = System.nanoTime();
+			long passed = drawEnd - drawStart;
+			g2.setColor(Color.white);
+			g2.drawString("Draw time: "+passed, 200, 40);
+			System.out.println("Draw time: "+passed);
+		}
+
+		
+		ui.draw(g2);
+		
 		//dispose of this graphics context and release any system resources that it is using. the program still works without this line but this is a good practice to save some memories
 		g2.dispose();
 	}
 	public void playMusic(int i) {
 		
-		sound.setFile(i);
-		sound.play();
-		sound.loop();
+		music.setFile(i);
+		music.play();
+		music.loop();
 	}
 	
 	public void stopMusic() {
 		
-		sound.stop();
+		music.stop();
 	}
 	public void playSE(int i) {
 		
-		sound.setFile(i);
-		sound.play();
+		se.setFile(i);
+		se.play();
 	}
 	
 }

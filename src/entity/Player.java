@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 
 import main.GamePanel;
 import main.KeyHandler;
+import main.UtilityTool;
 
 public class Player extends Entity{
 	
@@ -18,7 +19,7 @@ public class Player extends Entity{
 	
 	public final int screenX;
 	public final int screenY;
-	int hasKey = 0;
+//	public int hasKey = 0;
 	
 	
 	public Player(GamePanel gp, KeyHandler keyh) {
@@ -51,23 +52,27 @@ public class Player extends Entity{
 	}
 	
 	public void getPlayerImage() {
+		up1 = setup("boy_up_1");
+		up2 = setup("boy_up_2");
+		down1 = setup("boy_down_1");
+		down2 = setup("boy_down_2");
+		left1 = setup("boy_left_1");
+		left2 = setup("boy_left_2");
+		right1 = setup("boy_right_1");
+		right2 = setup("boy_right_2");
+	}
+	public BufferedImage setup(String imageName) {
+		UtilityTool uTool = new UtilityTool();
+		BufferedImage image = null;
 		
 		try {
-			
-			up1 = ImageIO.read(getClass().getResource("/player/boy_up_1.png"));
-			up2 = ImageIO.read(getClass().getResource("/player/boy_up_2.png"));
-			down1 = ImageIO.read(getClass().getResource("/player/boy_down_1.png"));
-			down2 = ImageIO.read(getClass().getResource("/player/boy_down_2.png"));
-			left1 = ImageIO.read(getClass().getResource("/player/boy_left_1.png"));
-			left2 = ImageIO.read(getClass().getResource("/player/boy_left_2.png"));
-			right1 = ImageIO.read(getClass().getResource("/player/boy_right_1.png"));
-			right2 = ImageIO.read(getClass().getResource("/player/boy_right_2.png"));
+			image = ImageIO.read(getClass().getResource("/player/"+ imageName +".png"));
+			image = uTool.scaledImage(image, gp.tileSize, gp.tileSize);
 
-			
-			
-		}catch(IOException e) {
+		}catch (IOException e) {
 			e.printStackTrace();
 		}
+		return image;
 	}
 	public void update() {
 		if(keyH.upPressed == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rightPressed == true) {
@@ -94,7 +99,6 @@ public class Player extends Entity{
 			
 			// IF COLLISION IS FALSE, PLAYER CAN MOVE
 			if(collisionisOn == false) {
-				
 				switch(direction) {
 				case "up": worldY -= speed; break;
 				case "down": worldY += speed; break;
@@ -119,30 +123,6 @@ public class Player extends Entity{
 		
 		if(i != 999) {
 			
-			String objectName = gp.obj[i].name;
-			
-			switch(objectName) {
-			case "Key":
-				gp.playSE(2);
-				hasKey++;
-				gp.obj[i] = null;
-				System.out.println("Keys picked up: "+hasKey);
-				break;
-			case "Door":
-				if(hasKey > 0) {
-					gp.obj[i] = null;
-					hasKey--;
-					System.out.println("You open up the door\nRemaining keys: "+hasKey);
-				}
-				break;
-			case "Coffe":
-				gp.playSE(1);
-				speed += 2;
-				gp.obj[i] = null;
-				break;
-			case "Portfolio":
-				break;
-			}
 		}
 	}
 	
@@ -188,7 +168,7 @@ public class Player extends Entity{
 			}
 			break;
 		}
-		g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+		g2.drawImage(image, screenX, screenY, null);
 	}
 
 }

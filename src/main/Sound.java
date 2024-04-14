@@ -14,7 +14,7 @@ public class Sound {
 	
 	public Sound() {
 		
-		soundURL[0] = getClass().getResource("/sound/perfect_society_main_theme_audio.wav"); 
+		soundURL[0] = getClass().getResource("/sound/themeifind.wav"); 
 		soundURL[1] = getClass().getResource("/sound/coffe_slurp.wav"); 
 		soundURL[2] = getClass().getResource("/sound/key_sound.wav"); 
 	}

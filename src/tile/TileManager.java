@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import javax.imageio.ImageIO;
 
 import main.GamePanel;
+import main.UtilityTool;
 
 public class TileManager {
 
@@ -22,7 +23,7 @@ public class TileManager {
 		
 		this.gp = gp;
 		
-		tile = new Tile[10];
+		tile = new Tile[30];
 		mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
 		
 		getTileImage();
@@ -30,62 +31,37 @@ public class TileManager {
 	}
 	
 	public void getTileImage() {
+			
+			setup(0, "top_wall_green", true);
+			setup(1, "top_wall_leftTC", true);
+			setup(2, "top_wall_rightTC", true);
+			setup(3, "left_wall", true);
+			setup(4, "right_wall_green", true);
+			setup(5, "right_wall_green2", true);
+			setup(7, "top_wall_green2", true);
+			setup(8, "floor_brown", false);
+			setup(9, "computer_off", true);
+			setup(10, "top_qhell3", true);
+			setup(11, "top_qhell4", false);
+			setup(12, "top_zhell3", true);
+			setup(13, "top_zhell4", false);
+	}
+	
+	public void setup(int index, String imageName, boolean collision) {
+		
+		UtilityTool uTool = new UtilityTool();
 		
 		try {
+			tile[index] = new Tile();
+			tile[index].image = ImageIO.read(getClass().getResource("/tiles/" + imageName +".png")); //Fixa tiles innan
+			tile[index].image = uTool.scaledImage(tile[index].image, gp.tileSize, gp.tileSize);
+			tile[index].collision = collision;
+
 			
-			/**
-			 * top wall = 8
-			 * top left corner = 1
-			 * top right corner = 2
-			 * left wall = 3
-			 * left wall bottom = 4
-			 * bottom wall = 5
-			 * bottom wall right = 6
-			 * right wall = 7
-			 * */
-			
-			tile[0] = new Tile();
-			tile[0].image = ImageIO.read(getClass().getResource("/tiles/top_wall.png")); //Fixa tiles innan
-			tile[0].collision = true;
-			
-			tile[1] = new Tile();
-			tile[1].image = ImageIO.read(getClass().getResource("/tiles/top_wall_leftTC.png")); //Fixa tiles innan
-			tile[1].collision = true;
-			
-			tile[2] = new Tile();
-			tile[2].image = ImageIO.read(getClass().getResource("/tiles/top_wall_rightTC.png")); //Fixa tiles innan
-			tile[2].collision = true;
-			
-			tile[3] = new Tile();
-			tile[3].image = ImageIO.read(getClass().getResource("/tiles/left_wall.png")); //Fixa tiles innan
-			tile[3].collision = true;
-			
-			tile[4] = new Tile();
-			tile[4].image = ImageIO.read(getClass().getResource("/tiles/left_wall_bottomLC.png")); //Fixa tiles innan
-			tile[4].collision = true;
-			
-			tile[5] = new Tile();
-			tile[5].image = ImageIO.read(getClass().getResource("/tiles/bottom_wall.png")); //Fixa tiles innan
-			tile[5].collision = true;
-			
-			tile[6] = new Tile();
-			tile[6].image = ImageIO.read(getClass().getResource("/tiles/bottom_wall_rightC.png")); //Fixa tiles innan
-			tile[6].collision = true;
-			
-			tile[7] = new Tile();
-			tile[7].image = ImageIO.read(getClass().getResource("/tiles/wallinroom.png")); //Fixa tiles innan
-			tile[7].collision = true;
-			
-			tile[8] = new Tile();
-			tile[8].image = ImageIO.read(getClass().getResource("/tiles/floorl.png")); //Fixa tiles innan
-			
-			tile[9] = new Tile();
-			tile[9].image = ImageIO.read(getClass().getResource("/tiles/computer_off.png")); //Fixa tiles innan
-			tile[9].collision = true;
-			
-		}catch (IOException e) {
+		}catch(IOException e) {
 			e.printStackTrace();
 		}
+		
 	}
 	public void loadMap(String filePath) {
 		try {
@@ -138,7 +114,7 @@ public class TileManager {
 			   worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
 			   worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
 				
-				g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+				g2.drawImage(tile[tileNum].image, screenX, screenY, null);
 			}
 			
 			worldCol++;

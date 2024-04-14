@@ -4,9 +4,14 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class OBJ_Coffe extends SuperObject{
+import main.GamePanel;
 
-	public OBJ_Coffe() {
+public class OBJ_Coffe extends SuperObject{
+	
+	GamePanel gp;
+
+	public OBJ_Coffe(GamePanel gp) {
+		this.gp = gp;
 		
 		name = "Coffe";
 		try {

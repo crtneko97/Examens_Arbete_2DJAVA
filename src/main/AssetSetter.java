@@ -1,5 +1,6 @@
 package main;
 
+import entity.NPC_BearMinimum;
 import object.OBJ_Coffe;
 import object.OBJ_Door;
 import object.OBJ_Key;
@@ -19,5 +20,12 @@ public class AssetSetter {
 		
 		
 		
+	}
+	
+	public void setNpc() {
+		
+		gp.npc[0] = new NPC_BearMinimum(gp);
+		gp.npc[0].worldX = gp.tileSize*21;
+		gp.npc[0].worldY = gp.tileSize*21;
 	}
 }

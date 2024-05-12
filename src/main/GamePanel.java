@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 import org.w3c.dom.ls.LSOutput;
 
+import entity.Entity;
 import entity.Player;
 import object.SuperObject;
 import tile.TileManager;
@@ -42,7 +43,7 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	// SYSTEM
 	TileManager tileM = new TileManager(this);
-	KeyHandler keyH = new KeyHandler(this);
+	public KeyHandler keyH = new KeyHandler(this);
 	Sound music = new Sound();
 	Sound se = new Sound();
 	Thread gameThread;
@@ -54,11 +55,13 @@ public class GamePanel extends JPanel implements Runnable{
 	// ENTITY AND OBJECT
 	public Player player = new Player(this, keyH);
 	public SuperObject obj[] = new SuperObject[10];
+	public Entity npc[] = new Entity[10];
 	
 	// GAME STATE
 	public int gameState;
 	public final int playState = 1;
 	public final int pauseState = 2;
+	public final int dialougeState = 3;
 	
 	// Set player's default position
 	int playerX = 100;
@@ -76,6 +79,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public void setupGame() {
 		
 		aSetter.setObject();
+		aSetter.setNpc();
 		playMusic(0);
 		stopMusic();
 		gameState = playState;
@@ -131,7 +135,15 @@ public class GamePanel extends JPanel implements Runnable{
 		//Change the player position
 		if(gameState == playState) {
 			// x row y coloumn so whenever player hit these keys the key input is catched by KeyHandler and this update method updates the player coordinates then after this update, it's gonna call this paintComponent that draws a rectangle with updated player X and Y positions
-			player.update();			
+			// player
+			player.update();
+			
+			// npc
+			for(int i = 0; i < npc.length; i++) {
+				if(npc[i] != null) {
+					npc[i].update();
+				}
+			}
 		}
 		if(gameState == pauseState) {
 			// nothing
@@ -169,9 +181,19 @@ public class GamePanel extends JPanel implements Runnable{
 			}
 		}
 		
+		// NPC
+		for(int i = 0; i < npc.length; i++) {
+			if(npc[i] != null) {
+				npc[i].draw(g2);
+			}
+		}
+		
 		// PLAYER
 		player.draw(g2);
 		
+		// UI
+		ui.draw(g2);
+
 		// DEBUG
 		if(keyH.checkDrawTime == true) {
 			long drawEnd = System.nanoTime();
@@ -182,7 +204,6 @@ public class GamePanel extends JPanel implements Runnable{
 		}
 
 		
-		ui.draw(g2);
 		
 		//dispose of this graphics context and release any system resources that it is using. the program still works without this line but this is a good practice to save some memories
 		g2.dispose();

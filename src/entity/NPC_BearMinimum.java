@@ -29,10 +29,10 @@ public class NPC_BearMinimum extends Entity{
 	}
 	public void setDialogue() {
 		
-		dialogues[0] = "Hello motherfucker what's good? \nYou look f*** mate ^_~";
+		dialogues[0] = "Yo Yo! ^_~";
 		dialogues[1] = "I'm Bear";
 		dialogues[2] = "Bear fucking minimum";
-		dialogues[3] = "Care for a break? Mr ***** is jacking on heroin \nso try to avoid him :P";
+		dialogues[3] = "Care for a break? Mr ***** is grumpy \nso try to avoid him :P";
 	}
 	public void setAction() {
 		

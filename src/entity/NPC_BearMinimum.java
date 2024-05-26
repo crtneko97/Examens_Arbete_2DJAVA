@@ -31,7 +31,7 @@ public class NPC_BearMinimum extends Entity{
 		
 		dialogues[0] = "Yo Yo! ^_~";
 		dialogues[1] = "I'm Bear";
-		dialogues[2] = "Bear fucking minimum";
+		dialogues[2] = "Almost done w school mate?\nShie time flies..";
 		dialogues[3] = "Care for a break? Mr ***** is grumpy \nso try to avoid him :P";
 	}
 	public void setAction() {
@@ -61,7 +61,6 @@ public class NPC_BearMinimum extends Entity{
 	}
 	public void speak() {
 		
-		// Do this character specific stuff
 		
 		super.speak();
 	}
